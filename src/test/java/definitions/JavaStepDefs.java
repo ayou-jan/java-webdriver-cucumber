@@ -136,6 +136,9 @@ public class JavaStepDefs {
             case "7":
                 System.out.println("Sunday");
                 break;
+            case "8":
+                System.out.println("no such a day in a week");
+                break;
         }
     }
 }
