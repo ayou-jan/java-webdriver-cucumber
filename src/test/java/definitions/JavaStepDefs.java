@@ -3,6 +3,9 @@ package definitions;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class JavaStepDefs {
     @Given("I say hello world")
     public void iSayHelloWorld() {
@@ -140,5 +143,17 @@ public class JavaStepDefs {
                 System.out.println("no such a day in a week");
                 break;
         }
+    }
+
+    @And("I swap the names")
+    public void iSwapTheNames() {
+        Map<String, String> info = new HashMap<>();
+        info.put("firstName","John");
+        info.put("middleName","George");
+        String temporaryName = info.get("firstName");
+        info.put("firstName", info.get("middleName"));
+        info.put("middleName", temporaryName);
+        System.out.println(info);
+
     }
 }

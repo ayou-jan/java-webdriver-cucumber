@@ -19,3 +19,7 @@
       And I print if number "35" is positive
       And I print "5" th day of week
 
+      @java3
+      Scenario: Exercise after day 6
+        And I swap the names
+
