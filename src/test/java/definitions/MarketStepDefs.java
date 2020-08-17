@@ -84,18 +84,21 @@ public class MarketStepDefs {
         }
     }
 
-    @When("I verify email field behavior")
+    @Then("I verify email field behavior")
     public void iVerifyEmailFieldBehavior() throws InterruptedException {
+        getDriver().findElement(By.xpath("//button[@id='return']")).click();
+        Thread.sleep(1000);
         getDriver().findElement(By.xpath("//input[@name='email']")).clear();
         getDriver().findElement(By.xpath("//input[@name='email']")).sendKeys("email.com");
         Thread.sleep(1000);
-        // I did not understand what "then delete just one character" mean...
-        //getDriver().findElement(By.xpath("//input[@name='email']")).getText();
-        //Thread.sleep(1000);
+        getDriver().findElement(By.xpath("//input[@id='password']")).click();
+        getDriver().findElement(By.xpath("//label[@id='email-error']")).isDisplayed();
+        String currentEmail = getDriver().findElement(By.xpath("//input[@name='email']")).getAttribute("value");
+        currentEmail = "Artur@" + currentEmail;
         getDriver().findElement(By.xpath("//input[@name='email']")).clear();
+        getDriver().findElement(By.xpath("//input[@name='email']")).sendKeys(currentEmail);
         Thread.sleep(1000);
-        getDriver().findElement(By.xpath("//input[@name='email']")).sendKeys("Artur@email.com");
-        Thread.sleep(1000);
+        assertThat(!getDriver().findElement(By.xpath("//label[@id='email-error']")).isDisplayed());
 
     }
 

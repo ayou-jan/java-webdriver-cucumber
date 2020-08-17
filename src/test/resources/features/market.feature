@@ -15,12 +15,13 @@
       Given I go to "quote" page
       And I print page details
       When I fill out required fields
-      When I verify email field behavior
       And I "accept" agreement
       And I submit the form
       And I wait for 1 sec
       Then I verify required fields
       Then I verify that fields values recorded correctly
+      Then I verify email field behavior
+
 
     @market3
     Scenario: Play with resolutions
