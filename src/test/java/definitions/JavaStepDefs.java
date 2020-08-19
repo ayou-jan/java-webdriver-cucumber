@@ -3,6 +3,7 @@ package definitions;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -155,5 +156,34 @@ public class JavaStepDefs {
         info.put("middleName", temporaryName);
         System.out.println(info);
 
+    }
+
+    @Given("array {string}")
+    public void array(String array) {
+        System.out.println(array);
+        String[] arrayForChange = array.split(",");
+        arrayForChange[2]=array.split(",")[4];
+        arrayForChange[4]=array.split(",")[2];
+        for (String i : arrayForChange) {
+            System.out.print(i+" ");
+        }
+    }
+
+
+    @Given("does {int} divisible by {string}")
+    public void doesDivisibleBy(int arg0, String arg1) {
+
+    }
+
+    @Given("does {int} divisible by")
+    public void doesDivisibleBy(int a) {
+        System.out.println();
+        if (a%3==0 && a%4!=0) {
+            System.out.println("divisible by 3");
+        } else if (a%4==0 && a%3!=0) {
+            System.out.println("divisible by 4");
+        } else if (a%3==0 && a%4==0) {
+            System.out.println("divisible by 3 and 4");
+        }
     }
 }

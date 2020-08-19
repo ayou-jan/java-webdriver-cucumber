@@ -23,3 +23,9 @@
       Scenario: Exercise after day 6
         And I swap the names
 
+      @java4
+      Scenario: Exercises after day 7
+        Given array "5,2,9,7,3"
+        Given does 8 divisible by
+
+
