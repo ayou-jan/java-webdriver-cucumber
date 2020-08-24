@@ -149,8 +149,8 @@ public class JavaStepDefs {
     @And("I swap the names")
     public void iSwapTheNames() {
         Map<String, String> info = new HashMap<>();
-        info.put("firstName","John");
-        info.put("middleName","George");
+        info.put("firstName", "John");
+        info.put("middleName", "George");
         String temporaryName = info.get("firstName");
         info.put("firstName", info.get("middleName"));
         info.put("middleName", temporaryName);
@@ -162,10 +162,10 @@ public class JavaStepDefs {
     public void array(String array) {
         System.out.println(array);
         String[] arrayForChange = array.split(",");
-        arrayForChange[2]=array.split(",")[4];
-        arrayForChange[4]=array.split(",")[2];
+        arrayForChange[2] = array.split(",")[4];
+        arrayForChange[4] = array.split(",")[2];
         for (String i : arrayForChange) {
-            System.out.print(i+" ");
+            System.out.print(i + " ");
         }
     }
 
@@ -178,12 +178,79 @@ public class JavaStepDefs {
     @Given("does {int} divisible by")
     public void doesDivisibleBy(int a) {
         System.out.println();
-        if (a%3==0 && a%4!=0) {
+        if (a % 3 == 0 && a % 4 != 0) {
             System.out.println("divisible by 3");
-        } else if (a%4==0 && a%3!=0) {
+        } else if (a % 4 == 0 && a % 3 != 0) {
             System.out.println("divisible by 4");
-        } else if (a%3==0 && a%4==0) {
+        } else if (a % 3 == 0 && a % 4 == 0) {
             System.out.println("divisible by 3 and 4");
         }
     }
+
+    @And("I do my homework")
+    public void iDoMyHomework() {
+        System.out.println("Task 1 && 2:");
+        printNumbers(0);
+        System.out.println("Task 3");
+        printInteger();
+        System.out.println("Task 4");
+        printEvenInteger();
+        System.out.println("Task 5");
+        int[] a = {};
+        isEmpty(a);
+        int[] b = {1, 2};
+        isEmpty(b);
+        System.out.println("Task 7");
+        FizzBuzz(20);
+    }
+
+
+    void printNumbers(long n) {
+        if (n > 0) {
+            for (long i = 0; i <= n; i++) {
+                System.out.println(i);
+            }
+        } else if (n < 0) {
+            for (long i = 0; i >= n; i--) {
+                System.out.println(i);
+            }
+        } else
+            System.out.println(0);
+    }
+
+    void printInteger() {
+        for (int i = Integer.MIN_VALUE; i <= Integer.MAX_VALUE; i++) {
+            System.out.println(i);
+        }
+    }
+
+    void printEvenInteger() {
+        for (int i = Integer.MIN_VALUE; i <= Integer.MAX_VALUE; i += 2) {
+            System.out.println(i);
+        }
+    }
+
+    boolean isEmpty(int[] a) {
+        if (a.length == 0) {
+            System.out.println("array is empty");
+            return true;
+        } else {
+            System.out.println("array has elements");
+            return false;
+        }
+    }
+
+
+    void FizzBuzz(int n) {
+        for (int i = 1; i <= n; i++) {
+            if (i % 3 == 0) {
+                System.out.print("Fizz ");
+            } else if (i % 5 == 0) {
+                System.out.print("Buzz ");
+            } else {
+                System.out.print(i + " ");
+            }
+        }
+    }
 }
+

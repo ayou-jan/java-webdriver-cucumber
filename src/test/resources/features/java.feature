@@ -28,4 +28,8 @@
         Given array "5,2,9,7,3"
         Given does 8 divisible by
 
+    @java5
+    Scenario: Exercises after day 8
+      And I do my homework
+
 
