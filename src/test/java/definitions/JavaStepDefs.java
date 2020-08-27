@@ -191,12 +191,12 @@ public class JavaStepDefs {
     public void iDoMyHomework() {
         System.out.println("Task 1 && 2:");
         printNumbers(0);
-        System.out.println("Task 3");
-        printInteger();
-        System.out.println("Task 4");
-        printEvenInteger();
+        //System.out.println("Task 3");
+        //printInteger();
+        //System.out.println("Task 4");
+        //printEvenInteger();
         System.out.println("Task 5");
-        int[] a = {};
+        int[] a = null;
         isEmpty(a);
         int[] b = {1, 2};
         isEmpty(b);
@@ -231,19 +231,21 @@ public class JavaStepDefs {
     }
 
     boolean isEmpty(int[] a) {
-        if (a.length == 0) {
-            System.out.println("array is empty");
-            return true;
-        } else {
+        if (a != null && a.length > 0) {
             System.out.println("array has elements");
             return false;
+        } else {
+            System.out.println("array is empty");
+            return true;
         }
     }
 
 
     void FizzBuzz(int n) {
         for (int i = 1; i <= n; i++) {
-            if (i % 3 == 0) {
+            if (i % 3 == 0 && i % 5 == 0) {
+                System.out.print("FizzBuzz ");
+            } else if (i % 3 == 0) {
                 System.out.print("Fizz ");
             } else if (i % 5 == 0) {
                 System.out.print("Buzz ");
