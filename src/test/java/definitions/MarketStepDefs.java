@@ -7,6 +7,8 @@ import cucumber.api.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static support.TestContext.*;
 
@@ -15,8 +17,12 @@ public class MarketStepDefs {
     public void iGoToPage(String page) {
         if (page.equalsIgnoreCase("quote")) {
             getDriver().get("https://skryabin.com/market/quote.html");
-        } else if (page.equalsIgnoreCase("google")) {
+        } else if (page.equalsIgnoreCase("usps")) {
+            getDriver().get("https://www.usps.com/");
+        }else if (page.equalsIgnoreCase("google")) {
             getDriver().get("https://www.google.com");
+        } else if (page.equalsIgnoreCase("calculator")) {
+            getDriver().get("https://www.calculator.net/");
         } else {
             throw new RuntimeException("Unsupported page: " + page);
         }
@@ -40,18 +46,19 @@ public class MarketStepDefs {
 
     @When("I fill out required fields")
     public void iFillOutRequiredFields() {
-        getDriver().findElement(By.xpath("//input[@name='username']")).sendKeys("Artur");
-        getDriver().findElement(By.xpath("//input[@name='email']")).sendKeys("Artur@email.com");
-        getDriver().findElement(By.xpath("//input[@name='password']")).sendKeys("12345");
-        getDriver().findElement(By.xpath("//input[@name='confirmPassword']")).sendKeys("12345");
+        Map<String, String> user = getData("user");
+        getDriver().findElement(By.xpath("//input[@name='username']")).sendKeys(user.get("username"));
+        getDriver().findElement(By.xpath("//input[@name='email']")).sendKeys(user.get("email"));
+        getDriver().findElement(By.xpath("//input[@name='password']")).sendKeys(user.get("password"));
+        getDriver().findElement(By.xpath("//input[@name='confirmPassword']")).sendKeys(user.get("password"));
         getDriver().findElement(By.xpath("//input[@id='name']")).click();
-        getDriver().findElement(By.xpath("//input[@name='firstName']")).sendKeys("Artur");
-        getDriver().findElement(By.xpath("//input[@name='lastName']")).sendKeys("Airiian");
+        getDriver().findElement(By.xpath("//input[@name='firstName']")).sendKeys(user.get("firstName"));
+        getDriver().findElement(By.xpath("//input[@name='lastName']")).sendKeys(user.get("lastName"));
         getDriver().findElement(By.xpath("//span[contains(text(),'Save')]")).click();
-        getDriver().findElement(By.xpath("//input[@name='phone']")).sendKeys("123456789");
+        getDriver().findElement(By.xpath("//input[@name='phone']")).sendKeys(user.get("phone"));
         getDriver().findElement(By.xpath("//select[@name='countryOfOrigin']")).click();
-        getDriver().findElement(By.xpath("//option[@value='China']")).click();
-        getDriver().findElement(By.xpath("//input[@value='male']")).click();
+        getDriver().findElement(By.xpath("//option[@value='" + user.get("countryOfOrigin") + "']")).click();
+        getDriver().findElement(By.xpath("//input[@value='" + user.get("gender") + "']")).click();
         getDriver().findElement(By.xpath("//input[@name='agreedToPrivacyPolicy']")).click();
     }
 
@@ -104,13 +111,14 @@ public class MarketStepDefs {
 
     @Then("I verify that fields values recorded correctly")
     public void iVerifyThatFieldsValuesRecordedCorrectly() {
-        assertThat(getDriver().findElement(By.xpath("//b[@name='username']")).getText()).isEqualTo("Artur");
-        assertThat(getDriver().findElement(By.xpath("//b[@name='firstName']")).getText()).isEqualTo("Artur");
-        assertThat(getDriver().findElement(By.xpath("//b[@name='lastName']")).getText()).isEqualTo("Airiian");
-        assertThat(getDriver().findElement(By.xpath("//b[@name='email']")).getText()).isEqualTo("Artur@email.com");
-        assertThat(getDriver().findElement(By.xpath("//b[@name='countryOfOrigin']")).getText()).isEqualTo("China");
-        assertThat(getDriver().findElement(By.xpath("//b[@name='password']")).getText()).contains("entered");
-        assertThat(getDriver().findElement(By.xpath("//b[@name='phone']")).getText()).contains("123456789");
+        Map<String, String> user = getData("user");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='username']")).getText()).isEqualTo("user1");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='firstName']")).getText()).isEqualTo("Justin");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='lastName']")).getText()).isEqualTo("Cloze");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='email']")).getText()).isEqualTo("jc@mail.com");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='countryOfOrigin']")).getText()).isEqualTo("Canada");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='password']")).getText()).doesNotContain("1234567890");
+        assertThat(getDriver().findElement(By.xpath("//b[@name='phone']")).getText()).contains("1234567890");
         assertThat(getDriver().findElement(By.xpath("//b[@name='agreedToPrivacyPolicy']")).isDisplayed());
 
     }
@@ -129,5 +137,38 @@ public class MarketStepDefs {
                 System.out.println("What to do?");
                 break;
         }
+    }
+
+    @And("I {string} third party agreement")
+    public void iThirdPartyAgreement(String action) throws InterruptedException {
+        getDriver().findElement(By.xpath("//button[@id='thirdPartyButton']")).click();
+
+        if (action.equals("accept")) {
+            getDriver().switchTo().alert().accept();
+        } else if (action.equals("dismiss")) {
+            getDriver().switchTo().alert().dismiss();
+        } else {
+            throw new RuntimeException("Incorrect action: " + action);
+        }
+    }
+
+    @And("I fill out {string} name and {string} phone contact")
+    public void iFillOutNameAndPhoneNumber(String name, String phone) {
+        getDriver().switchTo().frame(0);
+        getDriver().findElement(By.xpath("//input[@id='contactPersonName']")).sendKeys(name);
+        getDriver().findElement(By.xpath("//input[@id='contactPersonPhone']")).sendKeys(phone);
+        getDriver().switchTo().defaultContent();
+    }
+
+    @And("I verify document list contains {string}")
+    public void iVerifyDocumentList(String document) {
+        getDriver().findElement(By.xpath("//button[contains(@onclick,'new')]")).click();
+        String originalWindow = getDriver().getWindowHandle();
+        for (String handle : getDriver().getWindowHandles()) {
+            getDriver().switchTo().window(handle);
+        }
+        String result = getDriver().findElement(By.xpath("//body")).getText();
+        assertThat(result).contains(document);
+        getDriver().switchTo().window(originalWindow);
     }
 }

@@ -30,3 +30,13 @@
       And I wait for 1 sec
       And I change resolution to "desktop"
       And I wait for 1 sec
+
+    @market4
+    Scenario: Alert, iFrame, Window
+      Given I go to "quote" page
+      And I "accept" third party agreement
+      And I wait for 1 sec
+      And I fill out "Richard Roe" name and "0123456789" phone contact
+      And I wait for 1 sec
+      And I verify document list contains "Document 2"
+      
