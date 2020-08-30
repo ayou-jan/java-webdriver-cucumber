@@ -254,5 +254,42 @@ public class JavaStepDefs {
             }
         }
     }
+
+    @And("I check where are {int} and {int}")
+    public void iCheckWhereAreAnd(int first, int second) {
+        whereIsIt(first);
+        whereIsIt(second);
+    }
+
+    void whereIsIt(int number) {
+        if (number % 5 == 0) {
+            if (number >= 1 && number <= 10) {
+                System.out.println("it is in the range of 1..10");
+            }
+            if (number >= 11 && number <= 20) {
+                System.out.println("it is in the range of 11..20");
+            }
+        }
+    }
+
+    @And("reverse {string} and return every {int}")
+    public void reverseAndReturnEvery(String str, int n) {
+        String newStr = "";
+        for (int i = str.length() - 3; i >= 0; i -= 3) {
+            newStr += str.charAt(i);
+        }
+        System.out.println(newStr);
+    }
+
+    @And("I reverse words in row {string}")
+    public void iReverseWordsInRow(String str) {
+        String reversedRow = "";
+        String[] dividedStr = str.split(" ");
+        for (int i = dividedStr.length - 1; i >= 0; i--) {
+            reversedRow += dividedStr[i] + " ";
+        }
+        String answer = reversedRow.substring(0, reversedRow.length() - 1); //просто убираем последний пробел
+        System.out.println(answer);
+    }
 }
 

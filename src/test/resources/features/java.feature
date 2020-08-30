@@ -32,4 +32,8 @@
     Scenario: Exercises after day 8
       And I do my homework
 
-
+    @java6
+    Scenario: Exercises after day 10
+      And I check where are 5 and 12
+      And reverse "NotVeryLongString" and return every 3
+      And I reverse words in row "Few little words"
