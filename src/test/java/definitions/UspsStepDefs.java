@@ -5,12 +5,18 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static support.TestContext.getDriver;
+import static support.TestContext.*;
 
 public class UspsStepDefs {
     @When("I go to Lookup ZIP page by address")
@@ -49,10 +55,10 @@ public class UspsStepDefs {
 
     @When("I go to Calculate Price Page")
     public void iGoToCalculatePricePage() {
-        Actions actions = new Actions(getDriver());
+
         WebElement menuElement = getDriver().findElement(By.xpath("//a[contains(@class,'nav-first-element')]"));
         WebElement calculateElement = getDriver().findElement(By.xpath("//img[contains(@alt,'Calculate')]"));
-        actions.moveToElement(menuElement).click(calculateElement).perform();
+        getActions().moveToElement(menuElement).click(calculateElement).perform();
     }
 
     @And("I select {string} with {string} shape")
@@ -91,10 +97,10 @@ public class UspsStepDefs {
 
     @When("I navigate to Find a Location page")
     public void iNavigateToFindALocationPage() {
-        Actions actions = new Actions(getDriver());
+
         WebElement menuElement = getDriver().findElement(By.xpath("//a[contains(@class,'nav-first-element')]"));
         WebElement calculateElement = getDriver().findElement(By.xpath("//img[contains(@alt,'Locator')]"));
-        actions.moveToElement(menuElement).click(calculateElement).perform();
+        getActions().moveToElement(menuElement).click(calculateElement).perform();
     }
 
     @And("I filter by {string} location types, {string} services, {string} available services")
@@ -122,5 +128,58 @@ public class UspsStepDefs {
     public void iVerifyPhoneNumberIs(String phoneNumber) {
         getDriver().findElement(By.xpath("//div[@id='resultBox']/div/div")).click();
         assertThat(getDriver().findElement(By.xpath("//p[@class='ask-usps']")).getText()).contains(phoneNumber);
+    }
+
+    @When("I perform {string} search")
+    public void iPerformSearch(String search) {
+        WebElement searchMenu = getDriver().findElement(By.xpath("//li[contains(@class, 'nav-search')]"));
+        WebElement searchInput = getDriver().findElement(By.xpath("//input[@id='global-header--search-track-search']"));
+        getActions()
+                .moveToElement(searchMenu)
+                .sendKeys(searchInput, search)
+                .sendKeys(Keys.ENTER)
+                .perform();
+    }
+
+    @And("I set {string} in filters")
+    public void iSetInFilters(String filter) {
+
+        WebElement spinner = getDriver().findElement(By.xpath("//div[@class='white-spinner-container']"));
+        //getWait().until(ExpectedConditions.invisibilityOf(spinner));
+        WebElement filterElement = getDriver().findElement(By.xpath("//a[@class='dn-attr-a'][text()='" + filter + "']"));
+        //getWait().until(ExpectedConditions.invisibilityOf(spinner));
+
+        getExecutor().executeScript("arguments[0].click()", filterElement);
+        getWait().until(ExpectedConditions.invisibilityOf(spinner));
+    }
+
+    @Then("I verify that {string} results found")
+    public void iVerifyThatResultsFound(String excectedCount) {
+
+        int expectedSize = Integer.parseInt(excectedCount);
+        List<WebElement> results = getDriver().findElements(By.xpath("//ul[@id='records']/li"));
+        int actualSize = results.size();
+        assertThat(actualSize).isEqualTo(expectedSize);
+    }
+
+    @When("I select {string} in results")
+    public void iSelectInResults(String result) {
+        getDriver().findElement(By.xpath("//span[text()='Priority Mail | USPS']")).click();
+    }
+
+    @And("I click {string} button")
+    public void iClickButton(String buttonTitle) {
+        getDriver().findElement(By.xpath("//a[contains(text(),'" + buttonTitle + "')]")).click();
+    }
+
+    @Then("I validate that Sign In is required")
+    public void iValidateThatSignInIsRequired() {
+        String originalPage = getDriver().getWindowHandle();
+        for (String handle : getDriver().getWindowHandles()) {
+            getDriver().switchTo().window(handle);
+        }
+        getWait().until(ExpectedConditions.titleContains("Sign In"));
+        assertThat(getDriver().findElement(By.xpath("//button[@id='btn-submit']")).isDisplayed()).isTrue();
+        getDriver().switchTo().window(originalPage);
     }
 }
