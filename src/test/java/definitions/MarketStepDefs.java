@@ -23,7 +23,9 @@ public class MarketStepDefs {
             getDriver().get("https://www.google.com");
         } else if (page.equalsIgnoreCase("calculator")) {
             getDriver().get("https://www.calculator.net/");
-        } else {
+        } else if (page.equalsIgnoreCase("ups")) {
+            getDriver().get("https://www.ups.com/us/en/Home.page/");
+        }else {
             throw new RuntimeException("Unsupported page: " + page);
         }
     }
