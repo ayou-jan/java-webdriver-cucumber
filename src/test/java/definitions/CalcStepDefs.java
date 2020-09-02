@@ -13,8 +13,8 @@ import static support.TestContext.getDriver;
 
 public class CalcStepDefs {
     @When("I navigate to {string}")
-    public void iNavigateTo(String arg0) {
-        getDriver().findElement(By.xpath("//a[contains(text(),'Auto Loan Calculator')]")).click();
+    public void iNavigateTo(String page) {
+        getDriver().findElement(By.xpath("//a[contains(text(),'" + page + "')]")).click();
     }
 
     @And("I clear all calculator fields")
