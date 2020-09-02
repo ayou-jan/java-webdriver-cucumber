@@ -291,5 +291,56 @@ public class JavaStepDefs {
         String answer = reversedRow.substring(0, reversedRow.length() - 1); //просто убираем последний пробел
         System.out.println(answer);
     }
+
+    @And("I write two biggest numbers")
+    public void iWriteTwoBiggestNumbers() {
+        int[] arr1 = {1, 4, 6, -3, -5, 3, 35, -122, 0, 3, 5, 1};
+        findTwoBiggest(arr1);
+        System.out.println(findDuplicates(arr1));
+        System.out.println(isPalindrome("qwertyytrewq"));
+        System.out.println(isPalindrome("qwertyytrew"));
+        System.out.println(isPalindrome("qwertytrewq"));
+        System.out.println(mapOfCharQuantity("Ayriyan"));
+    }
+
+    void findTwoBiggest(int[] arr) {
+        Arrays.sort(arr);
+        System.out.println(arr[arr.length - 2]);
+        System.out.println(arr[arr.length - 1]);
+    }
+
+    boolean findDuplicates(int[] arr) {
+        Arrays.sort(arr);
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i] == arr[i + 1]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean isPalindrome(String word) {
+        for (int i = 0; i <= word.toCharArray().length / 2; i++) {
+            char[] symbols = word.toCharArray();
+            if (symbols[i] != symbols[symbols.length - 1 - i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    Map<Character, Integer> mapOfCharQuantity(String row) {
+        Map<Character, Integer> map = new HashMap<>();
+        char[] symbols = row.toCharArray();
+        map.put(symbols[0],1);
+        for (int i=1; i<symbols.length; i++) {
+            if (map.containsKey(symbols[i])) {
+                map.put(symbols[i],map.get(symbols[i])+1);
+            } else {
+                map.put(symbols[i],1);
+            }
+        }
+        return map;
+    }
 }
 

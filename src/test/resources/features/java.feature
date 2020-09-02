@@ -37,3 +37,7 @@
       And I check where are 5 and 12
       And reverse "NotVeryLongString" and return every 3
       And I reverse words in row "Few little words"
+
+      @java7
+      Scenario: Exercises after day 11
+        And I write two biggest numbers
