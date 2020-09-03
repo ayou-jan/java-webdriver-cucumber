@@ -37,12 +37,13 @@ public class UpsStepDefs {
     }
 
     @And("I submit the shipment form")
-    public void iSubmitTheShipmentForm() {
+    public void iSubmitTheShipmentForm() throws InterruptedException {
         if (getDriver().findElement(By.xpath("//span[@class='button-spinner']/button")).getText().equals("Continue")) {
             getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//button[contains(@id,'ContinueButton')]")));
         } else {
             getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//button[contains(@id,'ReviewPrimaryButton')]")));
         }
+
     }
 
     @Then("I verify origin shipment fields submitted")
@@ -78,6 +79,7 @@ public class UpsStepDefs {
 
     @And("I set packaging type and weight")
     public void iSetPackagingTypeAndWeight() {
+        getWait(10).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//img[contains(@class,'ups-package_image')]")));
         getDriver().findElement(By.xpath("//input[@id='nbsPackagePackageWeightField0']")).sendKeys("1");
         getDriver().findElement(By.xpath("//input[@id='nbsPackagePackageLengthField0']")).sendKeys("1");
         getDriver().findElement(By.xpath("//input[@id='nbsPackagePackageWidthField0']")).sendKeys("1");
@@ -101,8 +103,8 @@ public class UpsStepDefs {
         WebElement totalPrice = getDriver().findElement(By.xpath("//span[@id='total-charges-spinner']"));
         getDriver().findElement(By.xpath("//input[@id='nbsShipmentDescription']")).sendKeys("something");
         firstPrice = Double.parseDouble(totalPrice.getText().substring(1));
-        getDriver().findElement(By.xpath("//label[contains(@for,'SaturdayDeliveryOption')]")).click();
-        getWait().until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(totalPrice, totalPrice.getText())));
+        getExecutor().executeScript("arguments[0].click", getDriver().findElement(By.xpath("//input[contains(@id,'SaturdayDelivery')]")));
+        getWait().until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(totalPrice, "$" + firstPrice)));
         secondPrice = Double.parseDouble(totalPrice.getText().substring(1));
 
     }
