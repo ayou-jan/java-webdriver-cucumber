@@ -103,7 +103,7 @@ public class UpsStepDefs {
         WebElement totalPrice = getDriver().findElement(By.xpath("//span[@id='total-charges-spinner']"));
         getDriver().findElement(By.xpath("//input[@id='nbsShipmentDescription']")).sendKeys("something");
         firstPrice = Double.parseDouble(totalPrice.getText().substring(1));
-        getExecutor().executeScript("arguments[0].click", getDriver().findElement(By.xpath("//input[contains(@id,'SaturdayDelivery')]")));
+        getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//input[contains(@id,'SaturdayDelivery')]")));
         getWait().until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(totalPrice, "$" + firstPrice)));
         secondPrice = Double.parseDouble(totalPrice.getText().substring(1));
 
