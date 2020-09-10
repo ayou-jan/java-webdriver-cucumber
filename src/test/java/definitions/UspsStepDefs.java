@@ -4,6 +4,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import cucumber.api.java8.Th;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -13,6 +14,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -80,8 +83,8 @@ public class UspsStepDefs {
     }
 
     @When("I go to {string} tab")
-    public void iGoToTab(String helpTab) {
-        getDriver().findElement(By.xpath("//a[contains(@href,'faq')]")).click();
+    public void iGoToTab(String tab) {
+        getDriver().findElement(By.xpath("//a[@class='menuitem'][contains(text(),'" + tab + "')]")).click();
     }
 
     @And("I perform {string} help search")
@@ -154,9 +157,9 @@ public class UspsStepDefs {
     }
 
     @Then("I verify that {string} results found")
-    public void iVerifyThatResultsFound(String excectedCount) {
+    public void iVerifyThatResultsFound(String expectedCount) {
 
-        int expectedSize = Integer.parseInt(excectedCount);
+        int expectedSize = Integer.parseInt(expectedCount);
         List<WebElement> results = getDriver().findElements(By.xpath("//ul[@id='records']/li"));
         int actualSize = results.size();
         assertThat(actualSize).isEqualTo(expectedSize);
@@ -164,7 +167,8 @@ public class UspsStepDefs {
 
     @When("I select {string} in results")
     public void iSelectInResults(String result) {
-        getDriver().findElement(By.xpath("//span[text()='Priority Mail | USPS']")).click();
+
+        getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//span[contains(text(),'" + result + "')]")));
     }
 
     @And("I click {string} button")
@@ -181,5 +185,76 @@ public class UspsStepDefs {
         getWait().until(ExpectedConditions.titleContains("Sign In"));
         assertThat(getDriver().findElement(By.xpath("//button[@id='btn-submit']")).isDisplayed()).isTrue();
         getDriver().switchTo().window(originalPage);
+    }
+
+    @And("I enter {string} into store search")
+    public void iEnterIntoStoreSearch(String arg0) throws AWTException {
+        getDriver().findElement(By.xpath("//input[@id='store-search']")).sendKeys("12345");
+        new Robot().keyPress(KeyEvent.VK_ENTER);
+
+    }
+
+    @Then("I search and validate no products found")
+    public void iSearchAndValidateNoProductsFound() {
+        assertThat(ExpectedConditions.textToBePresentInElement(getDriver().findElement(By.xpath("//p[@style]")), "did not match"));
+    }
+
+    @When("I go to {string} under {string}")
+    public void iGoToUnder(String where, String menu) {
+        WebElement menuElement = getDriver().findElement(By.xpath("//a[contains(text(),'" + menu + "')][@role='menuitem']"));
+        WebElement direction = getDriver().findElement(By.xpath("//ul[@role='menu']//a[text()='" + where + "']"));
+        getActions().moveToElement(menuElement).click(direction).perform();
+    }
+
+    @And("choose mail service Priority Mail")
+    public void chooseMailServicePriorityMail() {
+        //getWait().until(ExpectedConditions.visibilityOf(getDriver().findElement(By.xpath("//div[text()='Feedback']"))));
+        //getActions().keyDown(Keys.CONTROL).sendKeys(Keys.END).perform();
+        getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//h4[contains(text(),'Mail Service')]/..//label[contains(@for,'Priority')][not(contains(text(),'Express'))]")));    }
+
+    @Then("I verify {int} items found")
+    public void iVerifyItemsFound(int arg0) {
+        List<WebElement> items = getDriver().findElements(By.xpath("//div[@class='col-6 col-md-4 results-per-page ']"));
+        assertThat(items.size()).isEqualTo(arg0);
+    }
+
+    @When("I unselect Stamps checkbox")
+    public void iUnselectStampsCheckbox() {
+        getDriver().findElement(By.xpath("//label[@for='checkbox-type-Category-Stamps']")).click();
+    }
+
+    @And("select Vertical stamp Shape")
+    public void selectVerticalStampShape() {
+        getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//label[contains(@for,'Vertical')]")));
+    }
+
+    @And("I click Blue color")
+    public void iClickBlueColor() {
+        getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//div[contains(@onclick,'blue')]")));
+    }
+
+    @Then("I verify {string} and {string} filters")
+    public void iVerifyAndFilters(String color, String type) {
+        assertThat(getDriver().findElement(By.xpath("(//div[@class='cartridge-viewport'])[2]")).getText()).contains(color);
+        assertThat(getDriver().findElement(By.xpath("(//div[@class='cartridge-viewport'])[2]")).getText()).contains(type);
+    }
+
+    @And("I verify that items below {double} dollars exists")
+    public void iVerifyThatItemsBelowDollarsExists(double arg0) {
+        getDriver().findElement(By.xpath("(//button[contains(@class,'dropdown-items')])[1]")).click();
+        getDriver().findElement(By.xpath("(//a[contains(text(),'Low-High')])[1]")).click();
+        Double price = Double.parseDouble(getDriver().findElement(By.xpath("(//div[contains(@class,'cartridge-viewport')]//div[@class='results-product-preview-price'])[1]")).getText().substring(1));
+        assertThat(price).isLessThan(arg0);
+    }
+
+    @And("verify {string} service exists")
+    public void verifyServiceExists(String arg0) {
+        assertThat(getDriver().findElement(By.xpath("//option[@value='passportrenew']")).getText()).contains(arg0);
+    }
+
+    @And("I reserve new PO box for {string}")
+    public void iReserveNewPOBoxFor(String zip) {
+        getDriver().findElement(By.xpath("//input[@id='searchInput']")).sendKeys(zip);
+        getDriver().findElement(By.xpath("//span[@class='icon-search']")).click();
     }
 }
