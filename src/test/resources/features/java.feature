@@ -41,3 +41,7 @@
       @java7
       Scenario: Exercises after day 11
         And I write two biggest numbers
+
+      @java8
+      Scenario: Exercises with classes
+        Given I work with classes

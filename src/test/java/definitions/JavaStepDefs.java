@@ -2,10 +2,9 @@ package definitions;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import pages.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JavaStepDefs {
     @Given("I say hello world")
@@ -341,6 +340,47 @@ public class JavaStepDefs {
             }
         }
         return map;
+    }
+
+    @Given("I work with classes")
+    public void iWorkWithClasses() {
+        Animal cat = new Cat("Tom");
+        System.out.println(cat.getName());
+        cat.walk();
+        cat.sleep();
+        cat.speak();
+        cat.eat("fish");
+
+        Animal dog = new Dog();
+        System.out.println(dog.getName());
+        dog.walk();
+        dog.sleep();
+        dog.speak();
+        dog.eat("fish");
+
+        Horse horse = new Horse("loshadka", 35.4);
+        System.out.println(horse.getName());
+        horse.run();
+
+        SpecialDog specialDog = new SpecialDog("Pluto");
+        System.out.println(specialDog.getName());
+        specialDog.search();
+
+        List<Animal> list = new ArrayList<>();
+        list.add(cat);
+        list.add(dog);
+        list.add(horse);
+        list.add(specialDog);
+        printAnimalNames(list);
+
+    }
+
+    public void printAnimalNames(List<Animal> animals) {
+        System.out.println("print names method");
+        for (Animal animal : animals) {
+            animal.speak();
+            System.out.println(animal.getName());
+        }
     }
 }
 
