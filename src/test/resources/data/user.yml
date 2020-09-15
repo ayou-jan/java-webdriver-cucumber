@@ -3,6 +3,10 @@ firstName: Justin
 lastName: Cloze
 password: qwerty
 email: jc@mail.com
+
 phone: "1234567890"
 countryOfOrigin: Canada
 gender: male
+address: 1122 Creek way
+dateOfBirth: 05/10/1989
+CarMake: Toyota

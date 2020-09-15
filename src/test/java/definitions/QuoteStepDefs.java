@@ -4,6 +4,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import pages.ErrorNotes;
 import pages.QuoteForm;
 import pages.QuoteResult;
 
@@ -15,6 +16,7 @@ public class QuoteStepDefs {
 
     QuoteForm formPage = new QuoteForm();
     QuoteResult result = new QuoteResult();
+    ErrorNotes errorNotes = new ErrorNotes();
 
     @Given("I open {string} page")
     public void iOpenPage(String page) {
@@ -43,9 +45,10 @@ public class QuoteStepDefs {
     }
 
     @And("I submit the form oop")
-    public void iSubmitTheFormOop() {
+    public void iSubmitTheFormOop() throws InterruptedException {
 
         formPage.submit();
+        Thread.sleep(5000);
 
     }
 
@@ -58,5 +61,41 @@ public class QuoteStepDefs {
         result.checkPassword("[entered]");
         result.checkAgreement("true");
         result.checkName(user.get("firstName") + " " + user.get("lastName"));
+    }
+
+    @When("I fill out optional fields for {string} oop")
+    public void iFillOutOptionalFieldsForOop(String role) {
+        Map<String, String> user = getData(role);
+        formPage.fillCountryOfOrigin(user.get("countryOfOrigin"));
+        formPage.fillDateOfBirth(user.get("dateOfBirth"));
+        formPage.fillPhoneNumber(user.get("phone"));
+        formPage.fillAddress(user.get("address"));
+        formPage.selectGender();
+    }
+
+    @Then("I verify optional fields for {string} oop")
+    public void iVerifyOptionalFieldsForOop(String role) {
+        Map<String, String> user = getData(role);
+
+        result.checkCountryOfOrigin(user.get("countryOfOrigin"));
+        result.checkDateOfBirth(user.get("dateOfBirth"));
+        result.checkPhone(user.get("phone"));
+        result.checkAddress(user.get("address"));
+        result.checkGender(user.get("gender"));
+    }
+
+    @Then("I see {string} error message {string}")
+    public void iSeeErrorMessage(String type, String msg) {
+        errorNotes.checkErrorExistence(type, msg);
+    }
+
+    @When("I fill out {string} field with {string}")
+    public void iFillOutFieldWith(String field, String var) {
+        formPage.fillInputField(field, var);
+    }
+
+    @Then("I don't see {string} error message")
+    public void iDonTSeeErrorMessage(String type) {
+        errorNotes.checkErrorExistence(type);
     }
 }

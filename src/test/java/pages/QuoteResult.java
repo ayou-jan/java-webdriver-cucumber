@@ -34,6 +34,21 @@ public class QuoteResult {
     @FindBy(name = "lastName")
     private WebElement lastName;
 
+    @FindBy(name = "phone")
+    private WebElement phoneNumber;
+
+    @FindBy(name = "address")
+    private WebElement address;
+
+    @FindBy(name = "dateOfBirth")
+    private WebElement dateOfBirth;
+
+    @FindBy(name = "countryOfOrigin")
+    private WebElement countryOfOrigin;
+
+    @FindBy(name = "gender")
+    private WebElement gender;
+
     @FindBy(name = "agreedToPrivacyPolicy")
     private WebElement privacy;
 
@@ -55,6 +70,25 @@ public class QuoteResult {
         assertThat(privacy.getText()).isEqualTo(value);
     }
 
+    public void checkCountryOfOrigin(String value) {
+        assertThat(countryOfOrigin.getText()).isEqualTo(value);
+    }
+
+    public void checkDateOfBirth(String value) {
+        assertThat(dateOfBirth.getText()).isEqualTo(value);
+    }
+
+    public void checkPhone(String value) {
+        assertThat(phoneNumber.getText()).isEqualTo(value);
+    }
+
+    public void checkAddress(String value) {
+        assertThat(address.getText()).isEqualTo(value);
+    }
+
+    public void checkGender(String value) {
+        assertThat(gender.getText()).isEqualTo(value);
+    }
 
 
 }
