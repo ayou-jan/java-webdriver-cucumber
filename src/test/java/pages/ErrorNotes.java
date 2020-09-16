@@ -34,6 +34,9 @@ public class ErrorNotes {
     List<WebElement> errorTypes = new ArrayList();
 
     public void checkErrorExistence(String type, String error) {
+        if (errorTypes.size() != 0) {
+            errorTypes.removeAll(errorTypes);
+        }
         errorTypes.add(usernameError);
         errorTypes.add(emailError);
         errorTypes.add(passwordError);
@@ -44,6 +47,7 @@ public class ErrorNotes {
                 assertThat(errorType.getText()).contains(error);
             }
         }
+
     }
 
     public void checkErrorExistence(String type) {

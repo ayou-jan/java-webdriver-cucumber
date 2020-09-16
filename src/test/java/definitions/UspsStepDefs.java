@@ -254,6 +254,8 @@ public class UspsStepDefs {
 
     @And("I reserve new PO box for {string}")
     public void iReserveNewPOBoxFor(String zip) {
+        getWait().until(ExpectedConditions.elementToBeClickable(getDriver().findElement(By.id("searchInput"))));
+        getDriver().findElement(By.id("searchInput")).click();
         getDriver().findElement(By.xpath("//input[@id='searchInput']")).sendKeys(zip);
         getDriver().findElement(By.xpath("//span[@class='icon-search']")).click();
     }

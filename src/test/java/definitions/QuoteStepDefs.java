@@ -38,7 +38,6 @@ public class QuoteStepDefs {
         formPage.fillEmail(user.get("email"));
         formPage.fillBothPasswords(user.get("password"));
         formPage.fillName(user.get("firstName"), user.get("lastName"));
-
         formPage.agreeWithPrivacyPolicy();
 
 
@@ -48,7 +47,7 @@ public class QuoteStepDefs {
     public void iSubmitTheFormOop() throws InterruptedException {
 
         formPage.submit();
-        Thread.sleep(5000);
+
 
     }
 
@@ -97,5 +96,20 @@ public class QuoteStepDefs {
     @Then("I don't see {string} error message")
     public void iDonTSeeErrorMessage(String type) {
         errorNotes.checkErrorExistence(type);
+    }
+
+    @When("I fill out name field with first name {string} and last name {string}")
+    public void iFillOutNameFieldWithFirstNameAndLastName(String firstName, String lastName) {
+        formPage.fillName(firstName, lastName);
+    }
+
+    @Then("I verify {string} field value {string}")
+    public void iVerifyFieldValue(String type, String fullName) {
+        formPage.checkContent(type, fullName);
+    }
+
+    @When("I fill out name field with first name {string}, middle name {string}, last name {string}")
+    public void iFillOutNameFieldWithFirstNameMiddleNameLastName(String firstName, String middleName, String lastName) {
+        formPage.fillName(firstName, middleName, lastName);
     }
 }

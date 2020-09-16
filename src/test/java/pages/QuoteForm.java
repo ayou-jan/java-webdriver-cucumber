@@ -1,15 +1,17 @@
 package pages;
 
+import cucumber.api.java8.Th;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.in;
 import static support.TestContext.getDriver;
+import static support.TestContext.getWait;
 
 public class QuoteForm {
     private String url;
@@ -26,25 +28,28 @@ public class QuoteForm {
     }
 
 
-    @FindBy(name = "username")
+    @FindBy(xpath = "//*[@name='username'][@type='text']")
     private WebElement username;
 
     @FindBy(name = "email")
     private WebElement email;
 
-    @FindBy(name = "password")
+    @FindBy(xpath = "//*[@name='password'][@type='password']")
     private WebElement password;
 
     @FindBy(name = "confirmPassword")
     private WebElement confirmPassword;
 
-    @FindBy(name = "name")
+    @FindBy(xpath = "//*[@name='name'][@type='text']")
     private WebElement name;
 
-    @FindBy(name = "firstName")
+    @FindBy(xpath = "//*[@name='firstName'][@type='text']")
     private WebElement firstName;
 
-    @FindBy(name = "lastName")
+    @FindBy(xpath = "//*[@name='middleName'][@type='text']")
+    private WebElement middleName;
+
+    @FindBy(xpath = "//*[@name='lastName'][@type='text']")
     private WebElement lastName;
 
     @FindBy(name = "phone")
@@ -79,6 +84,10 @@ public class QuoteForm {
     }
 
     public void fillInputField(String field, String value) {
+        username.clear();
+        if (inputFields.size()!=0) {
+            inputFields.removeAll(inputFields);
+        }
         inputFields.add(username);
         inputFields.add(email);
         inputFields.add(password);
@@ -89,6 +98,7 @@ public class QuoteForm {
                 inputField.sendKeys(value);
             }
         }
+        phoneNumber.click();
     }
 
     public void fillEmail(String value) {
@@ -103,6 +113,14 @@ public class QuoteForm {
     public void fillName(String firstNameValue, String lastNameValue) {
         name.click();
         firstName.sendKeys(firstNameValue);
+        lastName.sendKeys(lastNameValue);
+        saveButton.click();
+    }
+
+    public void fillName(String firstNameValue, String middleNameValue, String lastNameValue) {
+        name.click();
+        firstName.sendKeys(firstNameValue);
+        middleName.sendKeys(middleNameValue);
         lastName.sendKeys(lastNameValue);
         saveButton.click();
     }
@@ -135,6 +153,10 @@ public class QuoteForm {
 
     public void submit() {
         submit.click();
+    }
+
+    public void checkContent(String field, String value) {
+        assertThat(name.getAttribute("value")).isEqualTo(value);
     }
 
 }
