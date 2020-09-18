@@ -1,17 +1,23 @@
 package definitions;
 
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
+import pages.UpsForm;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static support.TestContext.*;
 
 public class UpsStepDefs {
+
+    UpsForm upsForm = new UpsForm();
+
     @And("I open Shipping menu")
     public void iOpenShippingMenu() {
         getDriver().findElement(By.xpath("//a[@id='ups-menuLinks2']")).click();
@@ -37,13 +43,13 @@ public class UpsStepDefs {
     }
 
     @And("I submit the shipment form")
-    public void iSubmitTheShipmentForm() throws InterruptedException {
+    public void iSubmitTheShipmentForm() /*throws InterruptedException */ {
         if (getDriver().findElement(By.xpath("//span[@class='button-spinner']/button")).getText().equals("Continue")) {
             getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//button[contains(@id,'ContinueButton')]")));
         } else {
             getExecutor().executeScript("arguments[0].click()", getDriver().findElement(By.xpath("//button[contains(@id,'ReviewPrimaryButton')]")));
         }
-
+        //Thread.sleep(5000);
     }
 
     @Then("I verify origin shipment fields submitted")
@@ -127,5 +133,49 @@ public class UpsStepDefs {
         assertThat(getDriver().findElement(By.xpath("//package-review/div[@class='row']")).getText().contains("1 lbs"));
         assertThat(getDriver().findElement(By.xpath("//package-review/div[@class='row']")).getText().contains("1 in x 1 in x 1 in"));
 
+    }
+
+    //OOP
+
+    @Given("I open {string} page OOP")
+    public void iOpenPageOOP(String page) {
+        upsForm.open();
+    }
+
+    @And("I open Shipping menu OOP")
+    public void iOpenShippingMenuOOP() {
+        upsForm.shipping();
+    }
+
+    @And("I go to Create a Shipment OOP")
+    public void iGoToCreateAShipmentOOP() {
+        upsForm.createAShipment();
+    }
+
+    @When("I fill out origin shipment fields for {string} OOP")
+    public void iFillOutOriginShipmentFieldsOOP(String role) {
+        Map<String, String> user = getData(role);
+        upsForm.fillAllFields(user);
+    }
+
+    @And("I submit the shipment form OOP")
+    public void iSubmitTheShipmentFormOOP() {
+        upsForm.next();
+    }
+
+    @Then("I verify origin shipment fields for {string} submitted OOP")
+    public void iVerifyOriginShipmentFieldsForSubmittedOOP(String role) {
+        Map<String, String> user = getData(role);
+        assertThat(upsForm.isOriginInfoMatches(user)).isTrue();
+    }
+
+    @And("I cancel the shipment form OOP")
+    public void iCancelTheShipmentFormOOP() {
+        upsForm.cancel();
+    }
+
+    @Then("I verify shipment form is reset OOP")
+    public void iVerifyShipmentFormIsResetOOP() {
+        assertThat(upsForm.isReseted()).isTrue();
     }
 }

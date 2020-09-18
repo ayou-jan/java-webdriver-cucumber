@@ -1,5 +1,6 @@
 @ups
 Feature: ups testing
+  Background:
 
   @ups1
   Scenario: UPS end to end first
@@ -35,3 +36,14 @@ Feature: ups testing
     Then I review all recorded details on the review page
     And I cancel the shipment form
     Then I verify shipment form is reset
+
+  @ups3
+  Scenario: UPS end to end first OOP
+    Given I open "ups" page OOP
+    And I open Shipping menu OOP
+    And I go to Create a Shipment OOP
+    When I fill out origin shipment fields for "sender" OOP
+    And I submit the shipment form OOP
+    Then I verify origin shipment fields for "sender" submitted OOP
+    And I cancel the shipment form OOP
+    Then I verify shipment form is reset OOP
