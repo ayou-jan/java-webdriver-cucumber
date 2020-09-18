@@ -1,32 +1,22 @@
 package pages;
 
-import cucumber.api.java8.Th;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static support.TestContext.getDriver;
-import static support.TestContext.getWait;
 
-public class QuoteForm {
-    private String url;
-    private String title;
+public class QuoteForm extends Page {
 
     public QuoteForm() {
-        PageFactory.initElements(getDriver(), this);
         url = "https://skryabin.com/market/quote.html";
         title = "Get a Quote";
     }
-
-    public void open() {
-        getDriver().get(url);
-    }
-
 
     @FindBy(xpath = "//*[@name='username'][@type='text']")
     private WebElement username;
@@ -91,7 +81,7 @@ public class QuoteForm {
         inputFields.add(username);
         inputFields.add(email);
         inputFields.add(password);
-
+        inputFields.add(confirmPassword);
 
         for (WebElement inputField : inputFields) {
             if (inputField.getAttribute("name").contains(field)) {
@@ -152,7 +142,27 @@ public class QuoteForm {
     }
 
     public void submit() {
+
         submit.click();
+    }
+
+    // dynamic field
+    private WebElement errorElement(String fieldName) {
+        return getDriver().findElement(By.id(fieldName + "-error"));
+    }
+
+    public String getErrorFieldText(String fieldName) {
+        return errorElement(fieldName).getText();
+    }
+
+    public boolean isErrorFieldDisplayed(String fieldName) {
+        boolean isDisplayed;
+        try {
+            isDisplayed = errorElement(fieldName).isDisplayed();
+        } catch (NoSuchElementException e) {
+            isDisplayed = false;
+        }
+        return isDisplayed;
     }
 
     public void checkContent(String field, String value) {

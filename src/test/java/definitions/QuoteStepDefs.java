@@ -4,19 +4,20 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import pages.ErrorNotes;
+import org.openqa.selenium.By;
 import pages.QuoteForm;
 import pages.QuoteResult;
 
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static support.TestContext.getData;
+import static support.TestContext.getDriver;
 
 public class QuoteStepDefs {
 
     QuoteForm formPage = new QuoteForm();
     QuoteResult result = new QuoteResult();
-    ErrorNotes errorNotes = new ErrorNotes();
 
     @Given("I open {string} page")
     public void iOpenPage(String page) {
@@ -45,7 +46,7 @@ public class QuoteStepDefs {
 
     @And("I submit the form oop")
     public void iSubmitTheFormOop() throws InterruptedException {
-
+        getDriver().findElement(By.xpath("//div[@class='well form-summary']")).click();
         formPage.submit();
 
 
@@ -54,12 +55,11 @@ public class QuoteStepDefs {
     @Then("I verify required fields for {string} oop")
     public void iVerifyRequiredFieldsOop(String role) {
         Map<String, String> user = getData(role);
-
-        result.checkUsername(user.get("username"));
-        result.checkEmail(user.get("email"));
-        result.checkPassword("[entered]");
-        result.checkAgreement("true");
-        result.checkName(user.get("firstName") + " " + user.get("lastName"));
+        assertThat(result.getResult()).contains(user.get("username"));
+        assertThat(result.getResult()).contains(user.get("email"));
+        assertThat(result.getResult()).contains(user.get("firstName") + " " + user.get("lastName"));
+        assertThat(result.getPassword()).isEqualTo("[entered]");
+        assertThat(result.getResult()).doesNotContain(user.get("password"));
     }
 
     @When("I fill out optional fields for {string} oop")
@@ -76,16 +76,18 @@ public class QuoteStepDefs {
     public void iVerifyOptionalFieldsForOop(String role) {
         Map<String, String> user = getData(role);
 
-        result.checkCountryOfOrigin(user.get("countryOfOrigin"));
-        result.checkDateOfBirth(user.get("dateOfBirth"));
-        result.checkPhone(user.get("phone"));
-        result.checkAddress(user.get("address"));
-        result.checkGender(user.get("gender"));
+        assertThat(result.getResult()).contains(user.get("countryOfOrigin"));
+        assertThat(result.getResult()).contains(user.get("dateOfBirth"));
+        assertThat(result.getResult()).contains(user.get("address"));
+        assertThat(result.getResult()).contains(user.get("phone"));
+        assertThat(result.getResult()).contains(user.get("gender"));
+        assertThat(result.isAgreedToPrivacyPolicy()).isTrue();
     }
 
     @Then("I see {string} error message {string}")
-    public void iSeeErrorMessage(String type, String msg) {
-        errorNotes.checkErrorExistence(type, msg);
+    public void iSeeErrorMessage(String errorField, String errorMessage) {
+        String actualError = formPage.getErrorFieldText(errorField);
+        assertThat(actualError).isEqualTo(errorMessage);
     }
 
     @When("I fill out {string} field with {string}")
@@ -94,8 +96,8 @@ public class QuoteStepDefs {
     }
 
     @Then("I don't see {string} error message")
-    public void iDonTSeeErrorMessage(String type) {
-        errorNotes.checkErrorExistence(type);
+    public void iDonTSeeErrorMessage(String errorField) {
+        assertThat(formPage.isErrorFieldDisplayed(errorField)).isFalse();
     }
 
     @When("I fill out name field with first name {string} and last name {string}")
