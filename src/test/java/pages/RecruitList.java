@@ -24,7 +24,7 @@ public class RecruitList extends Page {
         //getActions().moveToElement(getDriver().findElement(By.xpath("//div[@class='col-sm-12 col-md-4 col-lg-3']//h4[text()='Principal Automation Engineer']"))).click();
     }
 
-    public Boolean verifyExistance(String name) {
+    public Boolean verifyExistence(String name) {
         return positionsArea.getText().contains(name);
     }
 

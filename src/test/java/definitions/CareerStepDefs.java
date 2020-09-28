@@ -37,6 +37,6 @@ public class CareerStepDefs {
 
     @And("I verify {string} position is removed")
     public void iVerifyPositionIsRemoved(String position) {
-        assertThat(recruitList.verifyExistance(position)).isFalse();
+        assertThat(recruitList.verifyExistence(position)).isFalse();
     }
 }
