@@ -18,12 +18,15 @@ public class ListHeroku extends Page {
     @FindBy(xpath = "//div[@style]/li//h4[@class='position-name']")
     private List<WebElement> positionsTitle;
 
+    @FindBy(xpath = "//button[text()='Recruit']")
+    private WebElement recruitButton;
+
     private WebElement acceptanceButton(int i) {
         return getDriver().findElement(By.xpath("//li[@id='" + (i + 1) + "']//i[@class='fa fa-check']"));
     }
 
-    public void verifyLogin() {
-        assertThat(logoutButton.isEnabled()).isTrue();
+    public Boolean verifyLogin() {
+        return logoutButton.isEnabled();
     }
 
     public void select(String position) {
@@ -35,14 +38,18 @@ public class ListHeroku extends Page {
         }
     }
 
-    public void verifyWithdraw(String position) {
+    public Boolean verifyWithdraw(String position) {
         for (int i = 0; i < positionsTitle.size(); i++) {
             if (positionsTitle.get(i).getText().contains(position)) {
                 getActions().moveToElement(positionsTitle.get(i));
-                assertThat(acceptanceButton(i).isEnabled()).isTrue();
-                break;
+                return acceptanceButton(i).isEnabled();
             }
         }
+        return false;
+    }
+
+    public void goToRecruitList() {
+        recruitButton.click();
     }
 
 }
